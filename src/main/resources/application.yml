@@ -9,7 +9,10 @@ spring:
         password: password
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
+    liquibase:
+        change-log: classpath:liquibase/master.xml
+        enabled: true

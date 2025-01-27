@@ -1,6 +1,6 @@
 version: '3.8'
-
 services:
+
   pg-main:
     container_name: pg-main
     image: postgres:14.15
@@ -11,6 +11,7 @@ services:
       POSTGRES_USER: mesh
       POSTGRES_PASSWORD: password
     restart: always
+
   pg-keyloack:
     container_name: postgres
     image: postgres:14.15
@@ -21,6 +22,7 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
     restart: always
+
   keycloak:
     container_name: keycloak
     image: keycloak/keycloak:26.1
@@ -39,6 +41,7 @@ services:
     links:
       - pg-keyloack
     restart: always
+
   redis:
     container_name: redis
     image: redis:7.4.2
@@ -48,6 +51,7 @@ services:
     environment:
       REDIS_REPLICATION_MODE: master
     restart: always
+
   es-node:
     image: elasticsearch:8.16.3
     logging:
@@ -71,7 +75,7 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - ./elasticsearch_data:/usr/share/elasticsearch/data
+      - ./es_data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9600:9600"
