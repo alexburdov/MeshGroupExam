@@ -10,7 +10,7 @@
             </not>
         </preConditions>
         <createTable tableName="user">
-            <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}">
+            <column name="ID" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="NAME" type="VARCHAR(500)">
@@ -31,7 +31,7 @@
         </preConditions>
 
         <createTable tableName="account">
-            <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}">
+            <column name="ID" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="USER_ID" type="BIGINT">
@@ -49,7 +49,7 @@
         </preConditions>
 
         <createTable tableName="email_data">
-            <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}">
+            <column name="ID" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="USER_ID" type="BIGINT">
@@ -67,7 +67,7 @@
         </preConditions>
 
         <createTable tableName="phone_data">
-            <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}">
+            <column name="ID" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="USER_ID" type="BIGINT">

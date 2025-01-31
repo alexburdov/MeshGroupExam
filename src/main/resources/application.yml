@@ -1,3 +1,7 @@
+jwt:
+    secret: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+    lifetime: 18000
+
 spring:
     application:
         name: mesh
@@ -16,3 +20,9 @@ spring:
     liquibase:
         change-log: classpath:liquibase/master.xml
         enabled: true
+
+keycloak:
+    auth-server-url: http://localhost:8080/authenticate
+    realm: mesh
+    public-client: true
+    resource: mesh-client
