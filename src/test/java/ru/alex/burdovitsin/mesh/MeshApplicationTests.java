@@ -3,8 +3,12 @@ package ru.alex.burdovitsin.mesh;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-//@SpringBootTest
+@SpringBootTest
 class MeshApplicationTests {
+
+    static {
+        System.setProperty("liquibase.secureParsing", "false");
+    }
 
     @Test
     void contextLoads() {
