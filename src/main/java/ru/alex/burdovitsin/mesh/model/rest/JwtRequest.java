@@ -1,22 +1,27 @@
 package ru.alex.burdovitsin.mesh.model.rest;
 
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-@Data
+@Schema(description = "Запрос для аудинтификации")
+@Getter
+@NoArgsConstructor
 public class JwtRequest implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8275168691657327882L;
 
-    @NotEmpty
+    @Schema(description = "Имя пользователя")
+    @NotBlank
+    @Size(max = 500)
     private String username;
 
-    @NotEmpty
+    @Schema(description = "Пароль")
+    @NotBlank
     private String password;
-
-    public JwtRequest() {
-    }
 
     public JwtRequest(String username, String password) {
         this.username = username;

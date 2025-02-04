@@ -60,16 +60,10 @@ public class JwtTokenService {
     }
 
     private Claims extractAllClaims(String token) {
-//        return Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).getPayload();
-        return Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
     }
 
-//    private SecretKey getSecretKey() { //TODO разобраться с ключами
-//        return Jwts.SIG.HS256.key().build();
-//    }
-
-    private Key getSigningKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }

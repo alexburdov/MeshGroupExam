@@ -26,3 +26,11 @@ keycloak:
     realm: mesh
     public-client: true
     resource: mesh-client
+
+springdoc:
+    api-docs:
+        enabled: true
+        path: /api-docs
+    packages-to-scan:  ru.alex.burdovitsin.mesh
+    swagger-ui:
+        enabled: true

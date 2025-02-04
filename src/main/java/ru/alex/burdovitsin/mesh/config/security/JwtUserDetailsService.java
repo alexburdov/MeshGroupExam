@@ -20,9 +20,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(String.format(USER_NAME_NOT_FOUND_MESSAGE, username))
-        );
+        User user = userService.getByUsername(username);
         return new JwtUserDetails(user);
     }
 }
