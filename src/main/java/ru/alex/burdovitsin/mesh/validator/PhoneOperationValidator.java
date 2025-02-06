@@ -28,10 +28,12 @@ public class PhoneOperationValidator implements
                     break;
                 case UPDATE:
                     isValid = checkPhoneNumber(operation.getPhoneNumber(), messages)
+                            && checkUserId(operation.getUserId(), messages)
                             && checkPhoneId(operation.getPhoneId(), messages);
                     break;
                 case DELETE:
-                    isValid = checkPhoneId(operation.getPhoneId(), messages);
+                    isValid = checkUserId(operation.getUserId(), messages)
+                            && checkPhoneId(operation.getPhoneId(), messages);
                     break;
             }
         } else {

@@ -10,8 +10,6 @@ import ru.alex.burdovitsin.mesh.services.UserService;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private static final String USER_NAME_NOT_FOUND_MESSAGE = "User with name %s not found";
-
     private final UserService userService;
 
     public JwtUserDetailsService(UserService userService) {

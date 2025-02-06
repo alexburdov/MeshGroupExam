@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.alex.burdovitsin.mesh.exception.InvalidOperationException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,5 +25,11 @@ public class RestApiExceptionHandler {
                 )
         );
         return errors;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ExceptionHandler(InvalidOperationException.class)
+    public String handleValidationExceptions(InvalidOperationException ex) {
+        return ex.getMessage();
     }
 }

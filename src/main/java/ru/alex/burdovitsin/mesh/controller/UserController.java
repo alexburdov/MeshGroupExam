@@ -37,23 +37,28 @@ public class UserController {
         return userService.getByUsername(userName);
     }
 
+    //TODO реализовать responce через структуры ??????
     @PutMapping("/email_operation")
     public ResponseEntity<Long> emailOperation(@RequestBody @Valid EmailOperation operation) {
-        return ResponseEntity.ok(Long.valueOf(1L));
+        Long emailId = userService.emailOperation(operation);
+        return ResponseEntity.ok(emailId);
     }
 
     @PutMapping("/phone_operation")
     public ResponseEntity<Long> phoneOperation(@RequestBody @Valid PhoneOperation operation) {
-        return ResponseEntity.ok(Long.valueOf(1L));
+        Long phoneId = userService.phoneOperation(operation);
+        return ResponseEntity.ok(phoneId);
     }
 
     @PostMapping("/user_list")
     public ResponseEntity<List<UserItem>> getUserList(@RequestBody UserSeekRequest request) {
-        return ResponseEntity.ok(List.of());
+        List<UserItem> userList = userService.getUserList(request);
+        return ResponseEntity.ok(userList);
     }
 
     @PutMapping("/money_transfer")
     public ResponseEntity<BigDecimal> moneyTransfer(@RequestBody MoneyTransferOperation operation) {
-        return ResponseEntity.ok(BigDecimal.ONE);
+        BigDecimal newBalance = userService.moneyTransfer(operation);
+        return ResponseEntity.ok(newBalance);
     }
 }

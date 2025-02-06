@@ -6,8 +6,6 @@ import lombok.Setter;
 import ru.alex.burdovitsin.mesh.common.OperationTypes;
 import ru.alex.burdovitsin.mesh.validator.EmailOperationConstraint;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Schema(description = "Операция с e-mail пользователя")
@@ -17,7 +15,7 @@ import java.io.Serializable;
 public class EmailOperation implements Serializable {
     private static final long serialVersionUID = -6070785264299597707L;
 
-    @Schema(description = "User ID (Индетификатор пользователя) - имеет значение только при добавление e-mail")
+    @Schema(description = "User ID (Индетификатор пользователя)")
     private Long userId;
 
     @Schema(description = "E-Mail ID (Индетификатор e-mail) - имеет значение при обновление и удаление e-mail")

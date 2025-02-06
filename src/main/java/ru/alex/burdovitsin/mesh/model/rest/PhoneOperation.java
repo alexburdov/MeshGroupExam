@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class PhoneOperation implements Serializable {
     private static final long serialVersionUID = 8747347580322301999L;
 
-    @Schema(description = "User ID (Индетификатор пользователя) - имеет значение только при добавление телефона")
+    @Schema(description = "User ID (Индетификатор пользователя)")
     private Long userId;
 
     @Schema(description = "Phone ID (Индетификатор телефона) - имеет значение при обновление и удаление телефона")

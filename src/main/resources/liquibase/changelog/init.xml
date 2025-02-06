@@ -39,7 +39,14 @@
             <column name="USER_ID" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="BALANCE" type="DECIMAL" defaultValue="0" />
+            <column name="INIT_BALANCE" type="DECIMAL" defaultValue="0" >
+                <constraints nullable="false" checkConstraint="CHECK (BALANCE &gt;= 0)"/>
+                <!-- Дублирование ограничений на уровне базы данных. По идее это защитное програмирование -->
+            </column>
+            <column name="BALANCE" type="DECIMAL" defaultValue="0">
+                <constraints nullable="false" checkConstraint="CHECK (BALANCE &gt;= 0)"/>
+                <!-- Дублирование ограничений на уровне базы данных. По идее это защитное програмирование -->
+            </column>
         </createTable>
     </changeSet>
 
@@ -57,7 +64,10 @@
             <column name="USER_ID" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="EMAIL" type="VARCHAR(200)"/>
+            <column name="EMAIL" type="VARCHAR(200)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="EMAIL_idx"/>
+                <!-- Дублирование ограничений на уровне базы данных. По идее это защитное програмирование -->
+            </column>
         </createTable>
     </changeSet>
 
@@ -75,7 +85,10 @@
             <column name="USER_ID" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="PHONE" type="VARCHAR(13)" />
+            <column name="PHONE" type="VARCHAR(13)" >
+                <constraints nullable="false" unique="true" uniqueConstraintName="PHONE_idx"/>
+                <!-- Дублирование ограничений на уровне базы данных. По идее это защитное програмирование -->
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -29,10 +29,12 @@ public class EmailOperationValidator implements
                     break;
                 case UPDATE:
                     isValid = checkEmail(operation.getEmail(), messages)
+                            && checkUserId(operation.getUserId(), messages)
                             && checkEmailId(operation.getEmailId(), messages);
                     break;
                 case DELETE:
-                    isValid = checkEmailId(operation.getEmailId(), messages);
+                    isValid = checkUserId(operation.getUserId(), messages)
+                            && checkEmailId(operation.getEmailId(), messages);
                     break;
             }
         } else {

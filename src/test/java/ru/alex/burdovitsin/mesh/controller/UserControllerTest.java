@@ -44,10 +44,6 @@ class UserControllerTest extends AbstractBaseTest {
     }
 
     @Test
-    void emailOperation() {
-    }
-
-    @Test
     void phoneOperationGoodOne() throws Exception {
         PhoneOperation operation = new PhoneOperation();
         long generatedLong = new Random().nextLong();
