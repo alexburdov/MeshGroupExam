@@ -1,6 +1,6 @@
 package ru.alex.burdovitsin.mesh.validator;
 
-import ru.alex.burdovitsin.mesh.model.rest.PhoneOperation;
+import ru.alex.burdovitsin.mesh.model.rest.EmailOperation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -11,27 +11,28 @@ import java.util.regex.Pattern;
 
 import static ru.alex.burdovitsin.mesh.common.Constants.*;
 
-public class PhoneOperationValidator implements
-        ConstraintValidator<PhoneOperationConstraint, PhoneOperation> {
-    private static final Pattern PHONE_REGEXP_PATTERN = Pattern.compile("^(\\d{11}|\\s*)?$");
+public class EmailOperationValidator implements
+        ConstraintValidator<EmailOperationConstraint, EmailOperation> {
+
+    private final static Pattern EMAIL_REGEXP_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
-    public boolean isValid(PhoneOperation operation, ConstraintValidatorContext context) {
+    public boolean isValid(EmailOperation operation, ConstraintValidatorContext context) {
         boolean isValid = false;
         Set<String> messages = new HashSet<>();
 
         if (Objects.nonNull(operation)) {
             switch (operation.getOperation()) {
                 case CREATE:
-                    isValid = checkPhoneNumber(operation.getPhoneNumber(), messages)
+                    isValid = checkEmail(operation.getEmail(), messages)
                             && checkUserId(operation.getUserId(), messages);
                     break;
                 case UPDATE:
-                    isValid = checkPhoneNumber(operation.getPhoneNumber(), messages)
-                            && checkPhoneId(operation.getPhoneId(), messages);
+                    isValid = checkEmail(operation.getEmail(), messages)
+                            && checkEmailId(operation.getEmailId(), messages);
                     break;
                 case DELETE:
-                    isValid = checkPhoneId(operation.getPhoneId(), messages);
+                    isValid = checkEmailId(operation.getEmailId(), messages);
                     break;
             }
         } else {
@@ -46,11 +47,11 @@ public class PhoneOperationValidator implements
         return isValid;
     }
 
-    private boolean checkPhoneNumber(String phoneNumber, Set<String> messages) {
-        if (Objects.nonNull(phoneNumber) && PHONE_REGEXP_PATTERN.matcher(phoneNumber).matches()) {
+    private boolean checkEmail(String email, Set<String> messages) {
+        if (Objects.nonNull(email) && EMAIL_REGEXP_PATTERN.matcher(email).matches()) {
             return true;
         }
-        messages.add(INVALID_PHONE_NUMBER_MESSAGE);
+        messages.add(INVALID_EMAIL_MESSAGE);
         return false;
     }
 
@@ -62,11 +63,11 @@ public class PhoneOperationValidator implements
         return false;
     }
 
-    private boolean checkPhoneId(Long phoneId, Set<String> messages) {
-        if (Objects.nonNull(phoneId)) {
+    private boolean checkEmailId(Long emailId, Set<String> messages) {
+        if (Objects.nonNull(emailId)) {
             return true;
         }
-        messages.add(INVALID_PHONE_ID_MESSAGE);
+        messages.add(INVALID_EMAIL_ID_MESSAGE);
         return false;
     }
 }

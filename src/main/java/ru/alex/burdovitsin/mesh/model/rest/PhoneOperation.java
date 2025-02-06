@@ -4,14 +4,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import ru.alex.burdovitsin.mesh.common.OperationTypes;
+import ru.alex.burdovitsin.mesh.validator.PhoneOperationConstraint;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Schema(description = "Операция с телефоном пользователя")
 @Setter
 @Getter
+@PhoneOperationConstraint
 public class PhoneOperation implements Serializable {
     private static final long serialVersionUID = 8747347580322301999L;
 
@@ -28,6 +29,5 @@ public class PhoneOperation implements Serializable {
     private OperationTypes operation;
 
     @Schema(description = "Телефон пользователя. При операции удаление может принимать значение удаляемого телефона")
-    @Pattern(regexp = "^(\\d{13}|\\s*)?$")
     private String phoneNumber;
 }

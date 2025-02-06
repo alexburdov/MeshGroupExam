@@ -15,4 +15,16 @@ public class Constants {
 
     public static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
 
+    public static final String NULL_VALIDATED_OBJECT_MESSAGE = "Validate object is Null";
+
+    public static final String INVALID_PHONE_NUMBER_MESSAGE = "Phone Number is invalid";
+
+    public static final String INVALID_USER_ID_MESSAGE = "User ID is invalid";
+
+    public static final String INVALID_PHONE_ID_MESSAGE = "Phone ID is invalid";
+
+    public static final String INVALID_EMAIL_MESSAGE = "E-mail is invalid";
+
+    public static final String INVALID_EMAIL_ID_MESSAGE = "E-mail ID is invalid";
+
 }

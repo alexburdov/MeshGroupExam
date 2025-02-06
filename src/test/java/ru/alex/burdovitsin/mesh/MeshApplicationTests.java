@@ -6,10 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class MeshApplicationTests {
 
-    static {
-        System.setProperty("liquibase.secureParsing", "false");
-    }
-
     @Test
     void contextLoads() {
     }

@@ -69,7 +69,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.8.0</version>
-<!--            <version>1.5.13</version>-->
         </dependency>
 
         <dependency>
@@ -88,6 +87,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+            <version>4.7.1</version> <!-- Берем устаревшую что бы не было проблем с выставления флага  liquibase.secureParsing -->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
