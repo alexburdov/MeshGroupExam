@@ -23,17 +23,14 @@ public class PhoneOperationValidator implements
         if (Objects.nonNull(operation)) {
             switch (operation.getOperation()) {
                 case CREATE:
-                    isValid = checkPhoneNumber(operation.getPhoneNumber(), messages)
-                            && checkUserId(operation.getUserId(), messages);
+                    isValid = checkPhoneNumber(operation.getPhoneNumber(), messages);
                     break;
                 case UPDATE:
                     isValid = checkPhoneNumber(operation.getPhoneNumber(), messages)
-                            && checkUserId(operation.getUserId(), messages)
                             && checkPhoneId(operation.getPhoneId(), messages);
                     break;
                 case DELETE:
-                    isValid = checkUserId(operation.getUserId(), messages)
-                            && checkPhoneId(operation.getPhoneId(), messages);
+                    isValid = checkPhoneId(operation.getPhoneId(), messages);
                     break;
             }
         } else {
@@ -53,14 +50,6 @@ public class PhoneOperationValidator implements
             return true;
         }
         messages.add(INVALID_PHONE_NUMBER_MESSAGE);
-        return false;
-    }
-
-    private boolean checkUserId(Long userId, Set<String> messages) {
-        if (Objects.nonNull(userId)) {
-            return true;
-        }
-        messages.add(INVALID_USER_ID_MESSAGE);
         return false;
     }
 

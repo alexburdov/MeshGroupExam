@@ -4,16 +4,21 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ru.alex.burdovitsin.mesh.exception.UserAuthenticationException;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 import static ru.alex.burdovitsin.mesh.common.Constants.MILLISECOND_IN_SECOND;
+import static ru.alex.burdovitsin.mesh.config.security.JwtAuthenticationFilter.BEARER_PREFIX;
+import static ru.alex.burdovitsin.mesh.config.security.JwtAuthenticationFilter.JWT_HEADER_NAME;
 
 @Service
 public class JwtTokenService {
@@ -44,6 +49,20 @@ public class JwtTokenService {
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractUserName(HttpHeaders headers) {
+        List<String> jwtTokens = headers.get(JWT_HEADER_NAME);
+        if (jwtTokens != null && !jwtTokens.isEmpty()) {
+            String token = jwtTokens.get(0);
+            if (Strings.isNotBlank(token)) {
+                String user = extractUserName(token.replace(BEARER_PREFIX, ""));
+                if (Strings.isNotBlank(user)) {
+                    return user;
+                }
+            }
+        }
+        throw new UserAuthenticationException();
     }
 
     private boolean isTokenExpired(String token) {

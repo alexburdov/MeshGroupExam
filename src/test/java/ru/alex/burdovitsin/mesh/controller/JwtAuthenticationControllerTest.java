@@ -15,8 +15,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@ActiveProfiles("test")
 class JwtAuthenticationControllerTest extends AbstractBaseTest {
 
     public JwtAuthenticationControllerTest(WebApplicationContext context) {
@@ -25,10 +23,12 @@ class JwtAuthenticationControllerTest extends AbstractBaseTest {
 
     @BeforeEach
     void setUp() {
+        createMainUser();
     }
 
     @AfterEach
     void tearDown() {
+        clearAllData();
     }
 
     @Test

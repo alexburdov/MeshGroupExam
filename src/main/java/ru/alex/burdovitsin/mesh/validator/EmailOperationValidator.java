@@ -14,7 +14,8 @@ import static ru.alex.burdovitsin.mesh.common.Constants.*;
 public class EmailOperationValidator implements
         ConstraintValidator<EmailOperationConstraint, EmailOperation> {
 
-    private final static Pattern EMAIL_REGEXP_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private final static Pattern EMAIL_REGEXP_PATTERN
+            = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public boolean isValid(EmailOperation operation, ConstraintValidatorContext context) {
@@ -24,17 +25,14 @@ public class EmailOperationValidator implements
         if (Objects.nonNull(operation)) {
             switch (operation.getOperation()) {
                 case CREATE:
-                    isValid = checkEmail(operation.getEmail(), messages)
-                            && checkUserId(operation.getUserId(), messages);
+                    isValid = checkEmail(operation.getEmail(), messages);
                     break;
                 case UPDATE:
                     isValid = checkEmail(operation.getEmail(), messages)
-                            && checkUserId(operation.getUserId(), messages)
                             && checkEmailId(operation.getEmailId(), messages);
                     break;
                 case DELETE:
-                    isValid = checkUserId(operation.getUserId(), messages)
-                            && checkEmailId(operation.getEmailId(), messages);
+                    isValid = checkEmailId(operation.getEmailId(), messages);
                     break;
             }
         } else {
@@ -54,14 +52,6 @@ public class EmailOperationValidator implements
             return true;
         }
         messages.add(INVALID_EMAIL_MESSAGE);
-        return false;
-    }
-
-    private boolean checkUserId(Long userId, Set<String> messages) {
-        if (Objects.nonNull(userId)) {
-            return true;
-        }
-        messages.add(INVALID_USER_ID_MESSAGE);
         return false;
     }
 

@@ -19,8 +19,6 @@ public class Constants {
 
     public static final String INVALID_PHONE_NUMBER_MESSAGE = "Phone Number is invalid";
 
-    public static final String INVALID_USER_ID_MESSAGE = "User ID is invalid";
-
     public static final String INVALID_PHONE_ID_MESSAGE = "Phone ID is invalid";
 
     public static final String INVALID_EMAIL_MESSAGE = "E-mail is invalid";

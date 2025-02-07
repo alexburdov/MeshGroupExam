@@ -3,9 +3,7 @@ package ru.alex.burdovitsin.mesh.controller;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.context.WebApplicationContext;
 import ru.alex.burdovitsin.mesh.common.AbstractBaseTest;
 import ru.alex.burdovitsin.mesh.common.OperationTypes;
@@ -20,8 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@ActiveProfiles("test")
 class UserControllerTest extends AbstractBaseTest {
 
     public UserControllerTest(WebApplicationContext context) {
@@ -30,30 +26,30 @@ class UserControllerTest extends AbstractBaseTest {
 
     @BeforeEach
     void setUp() {
+        createMainUser();
     }
 
     @AfterEach
     void tearDown() {
+        clearAllData();
     }
 
     @Test
     public void echoTest() throws Exception {
         String token = getAuthToken();
-        mvc.perform(get("/echo").param(JwtAuthenticationFilter.HEADER_NAME, token))
-                .andExpect(content().string("ECHO"));
+        mvc.perform(get("/echo").header(JwtAuthenticationFilter.JWT_HEADER_NAME, token))
+                .andExpect(content().string("ECHO user"));
     }
 
     @Test
     void phoneOperationGoodOne() throws Exception {
         PhoneOperation operation = new PhoneOperation();
-        long generatedLong = new Random().nextLong();
-        operation.setUserId(generatedLong);
         operation.setOperation(OperationTypes.CREATE);
-        operation.setPhoneNumber("79207865432");
+        operation.setPhoneNumber("79207865431");
 
         String requestJson = objectWriter.writeValueAsString(operation);
         mvc.perform(put("/phone_operation")
-                .param(JwtAuthenticationFilter.HEADER_NAME, getAuthToken())
+                .header(JwtAuthenticationFilter.JWT_HEADER_NAME, getAuthToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         ).andExpect(status().isOk());
@@ -65,11 +61,11 @@ class UserControllerTest extends AbstractBaseTest {
         long generatedLong = new Random().nextLong();
         operation.setPhoneId(generatedLong);
         operation.setOperation(OperationTypes.CREATE);
-        operation.setPhoneNumber("79207865432");
+        operation.setPhoneNumber("207865432");
 
         String requestJson = objectWriter.writeValueAsString(operation);
         mvc.perform(put("/phone_operation")
-                .param(JwtAuthenticationFilter.HEADER_NAME, getAuthToken())
+                .header(JwtAuthenticationFilter.JWT_HEADER_NAME, getAuthToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         ).andExpect(status().is(422));
@@ -78,14 +74,11 @@ class UserControllerTest extends AbstractBaseTest {
     @Test
     void emailOperationGoodOne() throws Exception {
         EmailOperation operation = new EmailOperation();
-        long generatedLong = new Random().nextLong();
-        operation.setUserId(generatedLong);
         operation.setOperation(OperationTypes.CREATE);
-        operation.setEmail("tst@tst.tst");
-
+        operation.setEmail("tst@ts1t.tst");
         String requestJson = objectWriter.writeValueAsString(operation);
         mvc.perform(put("/email_operation")
-                .param(JwtAuthenticationFilter.HEADER_NAME, getAuthToken())
+                .header(JwtAuthenticationFilter.JWT_HEADER_NAME, getAuthToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         ).andExpect(status().isOk());
@@ -101,7 +94,7 @@ class UserControllerTest extends AbstractBaseTest {
 
         String requestJson = objectWriter.writeValueAsString(operation);
         mvc.perform(put("/email_operation")
-                .param(JwtAuthenticationFilter.HEADER_NAME, getAuthToken())
+                .header(JwtAuthenticationFilter.JWT_HEADER_NAME, getAuthToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         ).andExpect(status().is(422));

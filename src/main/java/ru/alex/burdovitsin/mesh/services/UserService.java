@@ -10,11 +10,11 @@ public interface UserService {
 
     User getByUsername(String username);
 
-    Long emailOperation(EmailOperation operation);
+    Long emailOperation(String userName, EmailOperation operation);
 
-    Long phoneOperation(PhoneOperation operation);
+    Long phoneOperation(String userName, PhoneOperation operation);
 
     List<UserItem> getUserList(UserSeekRequest request);
 
-    BigDecimal moneyTransfer(MoneyTransferOperation operation);
+    BigDecimal moneyTransfer(String userName, MoneyTransferOperation operation);
 }

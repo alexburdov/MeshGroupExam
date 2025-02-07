@@ -91,4 +91,13 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="hibernate-seq" author="Alexander Burdovitsin">
+        <preConditions  onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="hibernate_sequence"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
 </databaseChangeLog>

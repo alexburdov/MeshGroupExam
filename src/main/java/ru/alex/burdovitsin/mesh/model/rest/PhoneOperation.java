@@ -16,16 +16,12 @@ import java.io.Serializable;
 public class PhoneOperation implements Serializable {
     private static final long serialVersionUID = 8747347580322301999L;
 
-    @Schema(description = "User ID (Индетификатор пользователя)")
-    private Long userId;
-
     @Schema(description = "Phone ID (Индетификатор телефона) - имеет значение при обновление и удаление телефона")
     private Long phoneId;
 
     @Schema(description = "Тип операции по работе с телефоном: Создание/Изменение/Удаление"
             , allowableValues = {"CREATE", "UPDATE", "DELETE"}
     )
-    @NotNull
     private OperationTypes operation;
 
     @Schema(description = "Телефон пользователя. При операции удаление может принимать значение удаляемого телефона")
