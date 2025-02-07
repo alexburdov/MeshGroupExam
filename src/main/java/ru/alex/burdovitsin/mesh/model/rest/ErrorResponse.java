@@ -3,6 +3,7 @@ package ru.alex.burdovitsin.mesh.model.rest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 @Schema(description = "Сообщение о ошибке")
 @Setter
 @Getter
+@ToString
 public class ErrorResponse implements Serializable {
     private static final long serialVersionUID = 8585395365359767271L;
 

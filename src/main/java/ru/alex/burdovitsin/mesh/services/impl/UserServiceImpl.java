@@ -1,18 +1,23 @@
 package ru.alex.burdovitsin.mesh.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.alex.burdovitsin.mesh.exception.InvalidOperationException;
 import ru.alex.burdovitsin.mesh.exception.UserNotFoundException;
 import ru.alex.burdovitsin.mesh.model.jpa.EmailData;
+import ru.alex.burdovitsin.mesh.model.jpa.PhoneData;
 import ru.alex.burdovitsin.mesh.model.jpa.User;
 import ru.alex.burdovitsin.mesh.model.rest.*;
 import ru.alex.burdovitsin.mesh.repository.EmailDataRepository;
+import ru.alex.burdovitsin.mesh.repository.PhoneDataRepository;
 import ru.alex.burdovitsin.mesh.repository.UserRepository;
 import ru.alex.burdovitsin.mesh.services.UserService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -20,17 +25,23 @@ public class UserServiceImpl implements UserService {
 
     private final EmailDataRepository emailDataRepository;
 
-    public UserServiceImpl(UserRepository userRepository, EmailDataRepository emailDataRepository) {
+    private final PhoneDataRepository phoneDataRepository;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           EmailDataRepository emailDataRepository,
+                           PhoneDataRepository phoneDataRepository) {
         this.userRepository = userRepository;
         this.emailDataRepository = emailDataRepository;
+        this.phoneDataRepository = phoneDataRepository;
     }
 
     public User getByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findByUsername(username).orElseThrow(() -> new InvalidOperationException("User not found"));
     }
 
     @Override
     public Long emailOperation(String userName, EmailOperation operation) {
+        log.debug("emailOperation {} = {}", userName, operation);
         User user = userRepository.findByUsername(userName).orElseThrow(() -> new UserNotFoundException(userName));
         switch (operation.getOperation()) {
             case CREATE:
@@ -40,12 +51,13 @@ public class UserServiceImpl implements UserService {
             case DELETE:
                 return deleteEmail(user, operation.getEmailId());
             default:
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Invalid e-mail operation");
         }
     }
 
     @Override
     public Long phoneOperation(String userName, PhoneOperation operation) {
+        log.debug("phoneOperation {} = {}", userName, operation);
         User user = userRepository.findByUsername(userName).orElseThrow(() -> new UserNotFoundException(userName));
         switch (operation.getOperation()) {
             case CREATE:
@@ -55,7 +67,7 @@ public class UserServiceImpl implements UserService {
             case DELETE:
                 return deletePhone(user, operation.getPhoneId());
             default:
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Invalid phone operation");
         }
     }
 
@@ -76,28 +88,96 @@ public class UserServiceImpl implements UserService {
             newEmail.setUserId(user.getId());
             newEmail.setEmail(email);
             user.getEmailData().add(newEmail);
-            userRepository.saveAndFlush(user);
+            log.debug("Add email {} to {}", email, newEmail);
+            return userRepository.save(user)
+                    .getEmailData()
+                    .stream()
+                    .filter(e -> e.getEmail().equals(email))
+                    .findFirst()
+                    .orElseThrow(() -> new InvalidOperationException("E-mail not added"))
+                    .getId();
         }
-        return 0L;
+        throw new InvalidOperationException("E-mail exist");
     }
 
-    private Long updateUserEmail(User user, Long id, String email) {
-        return 0L;
+    private Long updateUserEmail(User user, Long emailId, String email) {
+        long userCountWithEmail = emailDataRepository.countByEmail(email);
+        if (userCountWithEmail == 0) {
+            EmailData emailData
+                    = user.getEmailData()
+                    .stream()
+                    .filter(e -> Objects.equals(e.getId(), emailId))
+                    .findFirst().orElseThrow(() -> new InvalidOperationException("E-mail not updated"));
+            emailData.setEmail(email);
+            userRepository.save(user);
+            log.debug("email {} updated", email);
+            return emailId;
+        }
+        throw new InvalidOperationException("E-mail exist");
     }
 
-    private Long deleteEmail(User user, Long id) {
-        return 0L;
+    private Long deleteEmail(User user, Long emailId) {
+        if (emailDataRepository.count() > 1) {
+            EmailData emailData
+                    = user.getEmailData()
+                    .stream()
+                    .filter(e -> Objects.equals(e.getId(), emailId))
+                    .findFirst().orElseThrow(() -> new InvalidOperationException("E-mail not updated"));
+            user.getEmailData().remove(emailData);
+            userRepository.save(user);
+            log.debug("email {} deleted", emailId);
+            return emailId;
+        }
+        throw new InvalidOperationException("Last E-mail delete error");
     }
 
     private Long addPhoneToUser(User user, String phoneNumber) {
-        return 0L;
+        long userCountWithPhone = phoneDataRepository.countByPhone(phoneNumber);
+        if (userCountWithPhone == 0) {
+            PhoneData phoneData = new PhoneData();
+            phoneData.setUserId(user.getId());
+            phoneData.setPhone(phoneNumber);
+            user.getPhoneData().add(phoneData);
+            log.debug("addPhoneToUser {} = {}", user.getId(), phoneNumber);
+            return userRepository.save(user)
+                    .getPhoneData()
+                    .stream()
+                    .filter(e -> e.getPhone().equals(phoneNumber))
+                    .findFirst()
+                    .orElseThrow(() -> new InvalidOperationException("Phone not added"))
+                    .getId();
+        }
+        throw new InvalidOperationException("Phone exist");
     }
 
     private Long updateUserPhone(User user, Long phoneId, String phoneNumber) {
-        return 0L;
+        long userCountWithPhone = phoneDataRepository.countByPhone(phoneNumber);
+        if (userCountWithPhone == 0) {
+            PhoneData phoneData
+                    = user.getPhoneData()
+                    .stream()
+                    .filter(e -> Objects.equals(e.getId(), phoneId))
+                    .findFirst().orElseThrow(() -> new InvalidOperationException("Phone not updated"));
+            phoneData.setPhone(phoneNumber);
+            userRepository.save(user);
+            log.debug("updateUserPhone {}", phoneNumber);
+            return phoneId;
+        }
+        throw new InvalidOperationException("Phone exist");
     }
 
     private Long deletePhone(User user, Long phoneId) {
-        return 0L;
+        if (phoneDataRepository.count() > 1) {
+            PhoneData phoneData
+                    = user.getPhoneData()
+                    .stream()
+                    .filter(e -> Objects.equals(e.getId(), phoneId))
+                    .findFirst().orElseThrow(() -> new InvalidOperationException("Phone not updated"));
+            user.getPhoneData().remove(phoneData);
+            userRepository.save(user);
+            log.debug("Phone deleted: {}", phoneId);
+            return phoneId;
+        }
+        throw new InvalidOperationException("Last Phone delete error");
     }
 }

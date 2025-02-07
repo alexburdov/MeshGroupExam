@@ -1,5 +1,6 @@
 package ru.alex.burdovitsin.mesh.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import ru.alex.burdovitsin.mesh.config.security.JwtTokenService;
 import ru.alex.burdovitsin.mesh.config.security.JwtUserDetailsService;
 import ru.alex.burdovitsin.mesh.services.AuthenticationService;
 
+@Slf4j
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -33,7 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(authentication);
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
+        log.info("Token created for user: " + username);
         return tokenService.generateToken(userDetails);
     }
 }

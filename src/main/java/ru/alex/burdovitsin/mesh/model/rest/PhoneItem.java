@@ -3,6 +3,7 @@ package ru.alex.burdovitsin.mesh.model.rest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @Schema(description = "Item с телефоном пользователя")
 @Setter
 @Getter
+@ToString
 public class PhoneItem implements Serializable {
     private static final long serialVersionUID = -4574644957102091236L;
 

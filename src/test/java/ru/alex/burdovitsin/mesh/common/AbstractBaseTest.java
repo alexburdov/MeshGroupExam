@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ru.alex.burdovitsin.mesh.config.security.JwtAuthenticationFilter;
+import ru.alex.burdovitsin.mesh.exception.InvalidOperationException;
 import ru.alex.burdovitsin.mesh.model.jpa.Account;
 import ru.alex.burdovitsin.mesh.model.jpa.EmailData;
 import ru.alex.burdovitsin.mesh.model.jpa.PhoneData;
@@ -81,6 +82,10 @@ public class AbstractBaseTest {
         return token;
     }
 
+    protected User getDefaultUser() {
+        return userRepository.findByUsername(DEFAULT_USER_NAME).orElseThrow(InvalidOperationException::new);
+    }
+
     private String createAuthToken() throws Exception {
         JwtRequest request = new JwtRequest(DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD);
         String requestJson = objectWriter.writeValueAsString(request);
@@ -106,27 +111,131 @@ public class AbstractBaseTest {
         emailDataRepository.deleteAll();
     }
 
-    protected User createUserOne() {
+    protected static User createUserOne() {
         User user = new User();
-        user.setId(1L);
         user.setUsername(DEFAULT_USER_NAME);
         user.setPassword(DEFAULT_CODE_USER_PASSWORD);
         user.setDateOfBird(Date.valueOf("1990-02-10"));
-        Account account = new Account();
-        account.setBalance(BigDecimal.TEN);
-        account.setInitBalance(BigDecimal.TEN);
+
+        Account account = createAccount(BigDecimal.valueOf(12134.12));
         user.setAccount(account);
-        List<PhoneData> phones = new ArrayList<>();
-        PhoneData phone = new PhoneData();
-        phone.setPhone("79207865432");
-        phones.add(phone);
+
+        List<PhoneData> phones = createPhoneData("71107865432");
         user.setPhoneData(phones);
 
-        List<EmailData> emails = new ArrayList<>();
-        EmailData email = new EmailData();
-        email.setEmail("tst@tst.tst");
-        emails.add(email);
+        List<EmailData> emails = createEmailData("tst@tst1.tst");
+        user.setEmailData(emails);
+
+        return user;
+    }
+
+    protected static User createUserTwo() {
+        User user = new User();
+        user.setUsername("user_two");
+        user.setPassword(DEFAULT_CODE_USER_PASSWORD);
+        user.setDateOfBird(Date.valueOf("1992-03-10"));
+
+        Account account = createAccount(BigDecimal.valueOf(121134.12));
+        user.setAccount(account);
+
+        List<PhoneData> phones = createPhoneData("72207865432");
+        user.setPhoneData(phones);
+
+        List<EmailData> emails = createEmailData("tst@tst2.tst");
+        user.setEmailData(emails);
+
+        return user;
+    }
+
+    protected static User createUserThree() {
+        User user = new User();
+        user.setUsername("user_three");
+        user.setPassword(DEFAULT_CODE_USER_PASSWORD);
+
+        Account account = createAccount(BigDecimal.valueOf(334.32));
+        user.setAccount(account);
+
+        List<PhoneData> phones = createPhoneData("73307865432");
+        user.setPhoneData(phones);
+
+        List<EmailData> emails = createEmailData("tst@tst3.tst");
+        user.setEmailData(emails);
+
+        return user;
+    }
+
+    protected static User createUserFour() {
+        User user = new User();
+        user.setUsername("user_four");
+        user.setPassword(DEFAULT_CODE_USER_PASSWORD);
+        user.setDateOfBird(Date.valueOf("1994-04-14"));
+
+        Account account = createAccount(BigDecimal.valueOf(444.44));
+        user.setAccount(account);
+
+        List<PhoneData> phones = createPhoneData("74407865432");
+        user.setPhoneData(phones);
+
+        List<EmailData> emails = createEmailData("tst@tst4.tst");
+        user.setEmailData(emails);
+
+        return user;
+    }
+
+    protected static User createUserFive() {
+        User user = new User();
+        user.setUsername("user_five");
+        user.setPassword(DEFAULT_CODE_USER_PASSWORD);
+
+        Account account = createAccount(BigDecimal.valueOf(15.15));
+        user.setAccount(account);
+
+        List<PhoneData> phones = createPhoneData("75507865432");
+        user.setPhoneData(phones);
+
+        List<EmailData> emails = createEmailData("tst@tst6.tst");
+        user.setEmailData(emails);
+
+        return user;
+    }
+
+    protected static User createUserSix() {
+        User user = new User();
+        user.setUsername("user_six");
+        user.setPassword(DEFAULT_CODE_USER_PASSWORD);
+        user.setDateOfBird(Date.valueOf("1990-06-10"));
+
+        Account account = createAccount(BigDecimal.valueOf(7.72));
+        user.setAccount(account);
+
+        List<PhoneData> phones = createPhoneData("77707865432");
+        user.setPhoneData(phones);
+
+        List<EmailData> emails = createEmailData("tst@tst6.tst");
         user.setEmailData(emails);
         return user;
+    }
+
+    protected static List<PhoneData> createPhoneData(String phoneNumber) {
+        List<PhoneData> phones = new ArrayList<>();
+        PhoneData phone = new PhoneData();
+        phone.setPhone(phoneNumber);
+        phones.add(phone);
+        return phones;
+    }
+
+    protected static List<EmailData> createEmailData(String email) {
+        List<EmailData> emails = new ArrayList<>();
+        EmailData emailData = new EmailData();
+        emailData.setEmail(email);
+        emails.add(emailData);
+        return emails;
+    }
+
+    protected static Account createAccount(BigDecimal value) {
+        Account account = new Account();
+        account.setBalance(value);
+        account.setInitBalance(value);
+        return account;
     }
 }

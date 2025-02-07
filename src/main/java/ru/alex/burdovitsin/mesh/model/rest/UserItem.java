@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -17,6 +18,7 @@ import java.util.List;
 @Schema(description = "Данные пользователя")
 @Setter
 @Getter
+@ToString
 public class UserItem implements Serializable {
     private static final long serialVersionUID = 1645522695515829190L;
 
