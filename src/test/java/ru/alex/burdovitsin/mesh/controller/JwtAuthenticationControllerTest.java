@@ -47,9 +47,6 @@ class JwtAuthenticationControllerTest extends AbstractBaseTest {
         String url = "/auth/token";
         JwtRequest request = new JwtRequest("no-user", "any");
         String requestJson = objectWriter.writeValueAsString(request);
-
-        Assertions.assertThrows(NestedServletException.class,
-                () -> mvc.perform(post(url).contentType(APPLICATION_JSON).content(requestJson)).andReturn());
+        mvc.perform(post(url).contentType(APPLICATION_JSON).content(requestJson)).andExpect(status().is(401));
     }
-
 }

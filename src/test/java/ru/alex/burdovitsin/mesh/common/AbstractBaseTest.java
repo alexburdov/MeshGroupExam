@@ -26,7 +26,7 @@ import ru.alex.burdovitsin.mesh.repository.PhoneDataRepository;
 import ru.alex.burdovitsin.mesh.repository.UserRepository;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +100,8 @@ public class AbstractBaseTest {
 
     protected void createMainUser() {
         User user = createUserOne();
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
     }
-
 
     protected void clearAllData() {
         userRepository.deleteAll();
@@ -115,7 +114,7 @@ public class AbstractBaseTest {
         User user = new User();
         user.setUsername(DEFAULT_USER_NAME);
         user.setPassword(DEFAULT_CODE_USER_PASSWORD);
-        user.setDateOfBird(Date.valueOf("1990-02-10"));
+        user.setDateOfBird(LocalDate.of(1982, 2, 1));
 
         Account account = createAccount(BigDecimal.valueOf(12134.12));
         user.setAccount(account);
@@ -133,7 +132,7 @@ public class AbstractBaseTest {
         User user = new User();
         user.setUsername("user_two");
         user.setPassword(DEFAULT_CODE_USER_PASSWORD);
-        user.setDateOfBird(Date.valueOf("1992-03-10"));
+        user.setDateOfBird(LocalDate.of(1992, 2, 1));
 
         Account account = createAccount(BigDecimal.valueOf(121134.12));
         user.setAccount(account);
@@ -168,7 +167,7 @@ public class AbstractBaseTest {
         User user = new User();
         user.setUsername("user_four");
         user.setPassword(DEFAULT_CODE_USER_PASSWORD);
-        user.setDateOfBird(Date.valueOf("1994-04-14"));
+        user.setDateOfBird(LocalDate.of(1994, 4, 3));
 
         Account account = createAccount(BigDecimal.valueOf(444.44));
         user.setAccount(account);
@@ -203,7 +202,7 @@ public class AbstractBaseTest {
         User user = new User();
         user.setUsername("user_six");
         user.setPassword(DEFAULT_CODE_USER_PASSWORD);
-        user.setDateOfBird(Date.valueOf("1990-06-10"));
+        user.setDateOfBird(LocalDate.of(1942, 10, 11));
 
         Account account = createAccount(BigDecimal.valueOf(7.72));
         user.setAccount(account);
@@ -211,7 +210,7 @@ public class AbstractBaseTest {
         List<PhoneData> phones = createPhoneData("77707865432");
         user.setPhoneData(phones);
 
-        List<EmailData> emails = createEmailData("tst@tst6.tst");
+        List<EmailData> emails = createEmailData("tst@tst16.tst");
         user.setEmailData(emails);
         return user;
     }

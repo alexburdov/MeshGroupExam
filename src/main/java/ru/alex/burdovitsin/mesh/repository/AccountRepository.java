@@ -1,7 +1,7 @@
 package ru.alex.burdovitsin.mesh.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import ru.alex.burdovitsin.mesh.model.jpa.Account;
 
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface AccountRepository extends CrudRepository<Account, Long> {
 }

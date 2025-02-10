@@ -20,9 +20,8 @@ import javax.validation.Valid;
 @Validated
 @RestController()
 @RequestMapping("/auth")
-@Tag(name = "Аутентификация")
 @Tag(
-        name = "Jwt Authentication Controller",
+        name = "Jwt Аутентификация",
         description = "Контроллер для аутентификации JWT"
 )
 public class JwtAuthenticationController {

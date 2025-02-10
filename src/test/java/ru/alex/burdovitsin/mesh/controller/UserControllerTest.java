@@ -99,7 +99,7 @@ class UserControllerTest extends AbstractBaseTest {
         User user = getDefaultUser();
         String actualEmail = "tst@ts1t.del";
         user.getEmailData().addAll(createEmailData(actualEmail));
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
         user = getDefaultUser();
         long emailId = user.getEmailData().get(0).getId();
         String deletedEmail = user.getEmailData().get(0).getEmail();
@@ -188,7 +188,7 @@ class UserControllerTest extends AbstractBaseTest {
         User user = getDefaultUser();
         String actualPhone = "11107865430";
         user.getPhoneData().addAll(createPhoneData(actualPhone));
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
         user = getDefaultUser();
         long phoneId = user.getPhoneData().get(0).getId();
         String deletedPhone = user.getPhoneData().get(0).getPhone();

@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +32,7 @@ public class User {
     private String username;
 
     @Column(name = "DATE_OF_BIRTH")
-    private java.sql.Date dateOfBird;
+    private LocalDate dateOfBird;
 
     @NotBlank
     @Size(min = 8, max = 500)
@@ -64,5 +65,4 @@ public class User {
     public int hashCode() {
         return Objects.hashCode(id);
     }
-
 }

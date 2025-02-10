@@ -29,7 +29,7 @@ public class UserItem implements Serializable {
     @Schema(description = "Имя пользователя", accessMode = Schema.AccessMode.READ_ONLY)
     @NotBlank
     @Size(max = 500)
-    private String name;
+    private String userName;
 
     @Schema(description = "Дата рождения пользователя", example = "01.05.1993", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonFormat(pattern = "dd.MM.yyyy")

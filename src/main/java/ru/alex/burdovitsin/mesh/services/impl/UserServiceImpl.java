@@ -1,9 +1,14 @@
 package ru.alex.burdovitsin.mesh.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.alex.burdovitsin.mesh.common.CommonUtils;
 import ru.alex.burdovitsin.mesh.exception.InvalidOperationException;
 import ru.alex.burdovitsin.mesh.exception.UserNotFoundException;
+import ru.alex.burdovitsin.mesh.mappers.UserMapper;
 import ru.alex.burdovitsin.mesh.model.jpa.EmailData;
 import ru.alex.burdovitsin.mesh.model.jpa.PhoneData;
 import ru.alex.burdovitsin.mesh.model.jpa.User;
@@ -16,6 +21,7 @@ import ru.alex.burdovitsin.mesh.services.UserService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,16 +33,21 @@ public class UserServiceImpl implements UserService {
 
     private final PhoneDataRepository phoneDataRepository;
 
+    private final UserMapper userMapper;
+
     public UserServiceImpl(UserRepository userRepository,
                            EmailDataRepository emailDataRepository,
-                           PhoneDataRepository phoneDataRepository) {
+                           PhoneDataRepository phoneDataRepository,
+                           UserMapper userMapper
+    ) {
         this.userRepository = userRepository;
         this.emailDataRepository = emailDataRepository;
         this.phoneDataRepository = phoneDataRepository;
+        this.userMapper = userMapper;
     }
 
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new InvalidOperationException("User not found"));
+    public Optional<User> getByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -73,10 +84,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserItem> getUserList(UserSeekRequest request) {
-        return List.of();
+        Pageable pageable = CommonUtils.transformToPageable(request);
+        request = CommonUtils.normalizeSeekRequest(request);
+        List<User> users = userRepository.getUserWithParameters(
+                request.getNameStartFrom(),
+                request.getDateOfBirthFrom(),
+                request.getEmailFull(),
+                request.getPhoneNumberFull(),
+                pageable);
+        return userMapper.usersToUserItems(users);
     }
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BigDecimal moneyTransfer(String userName, MoneyTransferOperation operation) {
         return null;
     }

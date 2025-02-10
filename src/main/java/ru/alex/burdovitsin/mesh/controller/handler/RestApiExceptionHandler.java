@@ -1,4 +1,4 @@
-package ru.alex.burdovitsin.mesh.controller;
+package ru.alex.burdovitsin.mesh.controller.handler;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpStatus;

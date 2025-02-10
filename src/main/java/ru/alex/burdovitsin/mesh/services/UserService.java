@@ -5,10 +5,11 @@ import ru.alex.burdovitsin.mesh.model.rest.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    User getByUsername(String username);
+    Optional<User> getByUsername(String username);
 
     Long emailOperation(String userName, EmailOperation operation);
 

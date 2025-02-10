@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.alex.burdovitsin.mesh.exception.UserAuthenticationException;
 import ru.alex.burdovitsin.mesh.model.jpa.User;
 import ru.alex.burdovitsin.mesh.services.UserService;
 
@@ -18,7 +19,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getByUsername(username);
+        User user = userService.getByUsername(username).orElseThrow(UserAuthenticationException::new);
         return new JwtUserDetails(user);
     }
 }
