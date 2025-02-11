@@ -18,4 +18,8 @@ public interface UserService {
     List<UserItem> getUserList(UserSeekRequest request);
 
     BigDecimal moneyTransfer(String userName, MoneyTransferOperation operation);
+
+    List<User> getUserForIncreaseBalance();
+
+    void increaseAccountBalanceIfNeeded(User user);
 }

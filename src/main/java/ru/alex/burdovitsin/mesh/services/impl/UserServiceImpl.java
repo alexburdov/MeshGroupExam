@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alex.burdovitsin.mesh.common.CommonUtils;
 import ru.alex.burdovitsin.mesh.exception.InvalidOperationException;
+import ru.alex.burdovitsin.mesh.exception.LowFundsException;
 import ru.alex.burdovitsin.mesh.exception.UserNotFoundException;
 import ru.alex.burdovitsin.mesh.mappers.UserMapper;
+import ru.alex.burdovitsin.mesh.model.jpa.Account;
 import ru.alex.burdovitsin.mesh.model.jpa.EmailData;
 import ru.alex.burdovitsin.mesh.model.jpa.PhoneData;
 import ru.alex.burdovitsin.mesh.model.jpa.User;
@@ -26,6 +28,10 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final BigDecimal MAX_MULTIPLIER = BigDecimal.valueOf(2.07);
+
+    private final BigDecimal INCREASED_MULTIPLIER = BigDecimal.valueOf(0.1);
 
     private final UserRepository userRepository;
 
@@ -51,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Long emailOperation(String userName, EmailOperation operation) {
         log.debug("emailOperation {} = {}", userName, operation);
         User user = userRepository.findByUsername(userName).orElseThrow(() -> new UserNotFoundException(userName));
@@ -67,6 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Long phoneOperation(String userName, PhoneOperation operation) {
         log.debug("phoneOperation {} = {}", userName, operation);
         User user = userRepository.findByUsername(userName).orElseThrow(() -> new UserNotFoundException(userName));
@@ -83,7 +91,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<UserItem> getUserList(UserSeekRequest request) {
+        log.debug("getUserList {}", request);
         Pageable pageable = CommonUtils.transformToPageable(request);
         request = CommonUtils.normalizeSeekRequest(request);
         List<User> users = userRepository.getUserWithParameters(
@@ -96,9 +106,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = {RuntimeException.class})
     public BigDecimal moneyTransfer(String userName, MoneyTransferOperation operation) {
-        return null;
+        log.info("moneyTransfer {} = {}", userName, operation);
+        User userFrom = userRepository.findByUsername(userName).orElseThrow(() -> new UserNotFoundException(userName));
+        BigDecimal newBalanceUserFrom = userFrom.getAccount().getBalance().subtract(operation.getTransferAmount());
+        if (newBalanceUserFrom.compareTo(BigDecimal.ZERO) < 0) {
+            throw new LowFundsException();
+        }
+        userFrom.getAccount().setBalance(newBalanceUserFrom);
+        User userTo = userRepository.findById(operation.getTransferToUser()).orElseThrow(() -> new UserNotFoundException(userName));
+        BigDecimal newBalanceUserTo = userTo.getAccount().getBalance().add(operation.getTransferAmount());
+        userTo.getAccount().setBalance(newBalanceUserTo);
+        userRepository.save(userFrom);
+        userRepository.save(userTo);
+        return newBalanceUserFrom;
+    }
+
+    @Override
+    public List<User> getUserForIncreaseBalance() {
+        return userRepository.getUsersForIncreaseBalance();
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = {RuntimeException.class})
+    public void increaseAccountBalanceIfNeeded(User user) {
+        Account account = user.getAccount();
+        if (Objects.nonNull(account)) {
+            BigDecimal balance = account.getBalance();
+            BigDecimal initialBalance = account.getInitBalance();
+            BigDecimal maxIncreasingBalance = initialBalance.multiply(MAX_MULTIPLIER);
+            if (balance.compareTo(maxIncreasingBalance) < 0) {
+                BigDecimal newBalance = balance.multiply(INCREASED_MULTIPLIER);
+                if (newBalance.compareTo(maxIncreasingBalance) > 0) {
+                    newBalance = maxIncreasingBalance;
+                }
+                log.info("Increasing account balance to {} for user {}", newBalance, user);
+                account.setBalance(newBalance);
+                userRepository.save(user);
+            }
+        } else {
+            log.error("Account for user {} is null", user);
+        }
     }
 
     private Long addEmailToUser(User user, String email) {

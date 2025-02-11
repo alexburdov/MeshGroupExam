@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,5 +24,6 @@ public class MoneyTransferOperation implements Serializable {
 
     @Schema(description = "Размер перевода")
     @NotNull
+    @DecimalMin("0.0")
     private BigDecimal transferAmount;
 }

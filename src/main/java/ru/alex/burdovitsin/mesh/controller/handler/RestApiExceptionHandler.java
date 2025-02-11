@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.alex.burdovitsin.mesh.exception.InvalidOperationException;
+import ru.alex.burdovitsin.mesh.exception.LowFundsException;
 import ru.alex.burdovitsin.mesh.exception.UserAuthenticationException;
 import ru.alex.burdovitsin.mesh.exception.UserNotFoundException;
 
@@ -46,4 +47,11 @@ public class RestApiExceptionHandler {
     public String handleUserAuthenticationException(UserAuthenticationException ex) {
         return ex.getMessage();
     }
+
+    @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
+    @ExceptionHandler(LowFundsException.class)
+    public String handleLowFundsException(LowFundsException ex) {
+        return ex.getMessage();
+    }
+
 }

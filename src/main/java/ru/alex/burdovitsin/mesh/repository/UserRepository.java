@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-
     @Query("SELECT u FROM User u " +
             " LEFT JOIN EmailData as ed ON u.id = ed.userId " +
             " LEFT JOIN PhoneData as pd ON u.id = pd.userId " +
@@ -26,4 +25,9 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
                                      @Param("email") String email,
                                      @Param("phoneNumber") String phoneNumber,
                                      Pageable pageable);
+
+    @Query("SELECT u FROM User u " +
+            " LEFT JOIN Account ac ON u.id = ac.userId " +
+            " WHERE ac.initBalance * 207 < ac.balance")
+    List<User> getUsersForIncreaseBalance();
 }
