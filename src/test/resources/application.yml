@@ -30,10 +30,11 @@ springdoc:
     packages-to-scan:  ru.alex.burdovitsin.mesh
     swagger-ui:
         enabled: true
+
 jwt:
     secret: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
     lifetime: 18000
 
 scheduler:
     enabled: true
-    increase-balance-cron: "*/30 * * * * *"
+    increase-balance-cron: "*/1 * * * * *"

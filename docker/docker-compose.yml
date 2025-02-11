@@ -1,6 +1,6 @@
 version: '3.8'
-
 services:
+
   pg-main:
     container_name: pg-main
     image: postgres:14.15
@@ -11,73 +11,77 @@ services:
       POSTGRES_USER: mesh
       POSTGRES_PASSWORD: password
     restart: always
-  pg-keyloack:
-    container_name: postgres
-    image: postgres:14.15
-    ports:
-      - "15432:5432"
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-    restart: always
-  keycloak:
-    container_name: keycloak
-    image: keycloak/keycloak:26.1
-    ports:
-      - "7070:8080"
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: password
-      PROXY_ADDRESS_FORWARDING: "true"
-    links:
-      - pg-keyloack
-    restart: always
-  redis:
-    container_name: redis
-    image: redis:7.4.2
-    command: redis-server --requirepass password
-    ports:
-      - "6379:6379"
-    environment:
-      REDIS_REPLICATION_MODE: master
-    restart: always
-  es-node:
-    image: elasticsearch:8.16.3
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1000m"
-        max-file: "10"
-    container_name: es-node
-    environment:
-      - discovery.type=single-node
-      - node.name=es-node
-      - discovery.seed_hosts=es-node
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - ./elasticsearch_data:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9600:9600"
-    networks:
-      - es-net
-networks:
-  es-net:
-volumes:
-  es-data:
+
+#  pg-keyloack:
+#    container_name: postgres
+#    image: postgres:14.15
+#    ports:
+#      - "15432:5432"
+#    environment:
+#      POSTGRES_DB: keycloak
+#      POSTGRES_USER: keycloak
+#      POSTGRES_PASSWORD: password
+#    restart: always
+#
+#  keycloak:
+#    container_name: keycloak
+#    image: keycloak/keycloak:26.1
+#    ports:
+#      - "7070:8080"
+#    environment:
+#      DB_VENDOR: POSTGRES
+#      DB_ADDR: postgres
+#      DB_DATABASE: keycloak
+#      DB_USER: keycloak
+#      DB_SCHEMA: public
+#      DB_PASSWORD: password
+#      KEYCLOAK_USER: admin
+#      KEYCLOAK_PASSWORD: password
+#      PROXY_ADDRESS_FORWARDING: "true"
+#    links:
+#      - pg-keyloack
+#    restart: always
+
+#  redis:
+#    container_name: redis
+#    image: redis:7.4.2
+#    command: redis-server --requirepass password
+#    ports:
+#      - "6379:6379"
+#    environment:
+#      REDIS_REPLICATION_MODE: master
+#    restart: always
+
+#  es-node:
+#    image: elasticsearch:8.16.3
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "1000m"
+#        max-file: "10"
+#    container_name: es-node
+#    environment:
+#      - discovery.type=single-node
+#      - node.name=es-node
+#      - discovery.seed_hosts=es-node
+#      - bootstrap.memory_lock=true
+#      - xpack.security.enabled=false
+#      - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#      nofile:
+#        soft: 65536
+#        hard: 65536
+#    volumes:
+#      - ./es_data:/usr/share/elasticsearch/data
+#    ports:
+#      - "9200:9200"
+#      - "9600:9600"
+#    networks:
+#      - es-net
+#networks:
+#  es-net:
+#volumes:
+#  es-data:
