@@ -42,15 +42,15 @@ services:
 #      - pg-keyloack
 #    restart: always
 
-#  redis:
-#    container_name: redis
-#    image: redis:7.4.2
-#    command: redis-server --requirepass password
-#    ports:
-#      - "6379:6379"
-#    environment:
-#      REDIS_REPLICATION_MODE: master
-#    restart: always
+  redis-main:
+    container_name: redis-main
+    image: bitnami/redis:7.4.2
+    command: redis-server --requirepass password
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_REPLICATION_MODE: master
+    restart: always
 
 #  es-node:
 #    image: elasticsearch:8.16.3

@@ -17,11 +17,10 @@ spring:
         change-log: classpath:liquibase/master.xml
         enabled: true
 
-keycloak:
-    auth-server-url: http://localhost:8080/authenticate
-    realm: mesh
-    public-client: true
-    resource: mesh-client
+    redis:
+        host: localhost
+        port: 6379
+
 
 springdoc:
     api-docs:
